@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "加载中...",
+    "save": "保存",
+    "saving": "保存中...",
+    "cancel": "取消",
+    "edit": "编辑",
+    "delete": "删除",
+    "confirm": "确认",
+    "male": "男",
+    "female": "女",
+    "none": "无",
+    "spouse": "配偶"
+  },
+  "nav": {
+    "home": "首页",
+    "dashboard": "仪表板",
+    "logout": "退出登录",
+    "language": "语言"
+  },
+  "home": {
+    "title": "族谱",
+    "subtitle": "记录和探索您的家族历史",
+    "description": "创建、管理和可视化您的族谱。追踪世代、记录关系，并保存家族回忆。",
+    "getStarted": "开始使用",
+    "signIn": "登录",
+    "features": {
+      "title": "功能特色",
+      "visual": {
+        "title": "可视化族谱",
+        "description": "通过交互式树形图查看您的家族关系"
+      },
+      "manage": {
+        "title": "管理成员",
+        "description": "添加、编辑和组织家族成员信息"
+      },
+      "photos": {
+        "title": "家族照片",
+        "description": "为每个家族成员上传和保存照片"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "族谱",
+    "welcome": "欢迎",
+    "viewOnly": "（仅查看）",
+    "addMember": "添加家族成员",
+    "emptyTree": {
+      "title": "族谱为空",
+      "description": "通过添加第一个家族成员来开始建立家族传承",
+      "descriptionViewOnly": "尚未添加任何家族成员。请稍后再查看！",
+      "addFirst": "添加第一个成员"
+    }
+  },
+  "memberModal": {
+    "addTitle": "添加家族成员",
+    "editTitle": "编辑家族成员",
+    "fields": {
+      "name": "姓名",
+      "nameRequired": "姓名 *",
+      "gender": "性别",
+      "genderRequired": "性别 *",
+      "birthDate": "出生日期",
+      "deathDate": "去世日期",
+      "father": "父亲",
+      "mother": "母亲",
+      "spouses": "配偶",
+      "spousesHint": "可选择多个配偶",
+      "description": "描述",
+      "descriptionPlaceholder": "添加关于此人的备注...",
+      "photo": "照片",
+      "uploadPhoto": "上传照片",
+      "changePhoto": "更换照片"
+    },
+    "deleteConfirm": "您确定要删除此家族成员吗？"
+  },
+  "errors": {
+    "fetchMembers": "获取成员时出错",
+    "deleteMembers": "删除成员时出错",
+    "updatePosition": "更新节点位置时出错",
+    "saveMember": "保存成员时出错"
+  }
+}

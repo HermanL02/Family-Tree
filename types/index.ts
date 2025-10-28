@@ -10,7 +10,7 @@ export interface IUser {
 
 export interface IFamilyMember {
   _id?: Types.ObjectId;
-  userId: Types.ObjectId;
+  userId: string; // Clerk user ID (string)
   name: string;
   gender: "male" | "female";
   birthDate?: Date;

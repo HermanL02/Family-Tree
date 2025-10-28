@@ -4,6 +4,7 @@ import { memo } from "react";
 import { Handle, Position, NodeProps } from "reactflow";
 import { motion } from "framer-motion";
 import { CldImage } from "next-cloudinary";
+import { useTranslations } from "next-intl";
 import { IFamilyMember } from "@/types";
 
 interface FamilyNodeData {
@@ -14,6 +15,8 @@ interface FamilyNodeData {
 }
 
 function FamilyNode({ data }: NodeProps<FamilyNodeData>) {
+  const tCommon = useTranslations("common");
+  const tModal = useTranslations("memberModal");
   const { member, onEdit, onDelete, isEditor } = data;
 
   const formatDate = (date?: Date) => {
@@ -77,19 +80,19 @@ function FamilyNode({ data }: NodeProps<FamilyNodeData>) {
                 className="text-xs px-2 py-1 bg-vintage-sepia text-vintage-paper rounded
                          hover:bg-vintage-dark transition-colors"
               >
-                Edit
+                {tCommon("edit")}
               </button>
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (confirm("Are you sure you want to delete this family member?")) {
+                  if (confirm(tModal("deleteConfirm"))) {
                     onDelete?.(member._id?.toString() || "");
                   }
                 }}
                 className="text-xs px-2 py-1 bg-red-600 text-white rounded
                          hover:bg-red-700 transition-colors"
               >
-                Delete
+                {tCommon("delete")}
               </button>
             </div>
           )}

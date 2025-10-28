@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useMemo } from "react";
+import { useTranslations } from "next-intl";
 import ReactFlow, {
   Node,
   Edge,
@@ -32,6 +33,8 @@ export default function FamilyTree({
   onUpdateNodePosition,
   isEditor,
 }: FamilyTreeProps) {
+  const tCommon = useTranslations("common");
+
   const nodeTypes = useMemo(
     () => ({
       familyNode: FamilyNode,
@@ -100,14 +103,14 @@ export default function FamilyTree({
             type: "straight",
             animated: false,
             style: { stroke: "#8b7355", strokeWidth: 2, strokeDasharray: "5,5" },
-            label: "Spouse",
+            label: tCommon("spouse"),
           });
         }
       });
     });
 
     return edges;
-  }, [members]);
+  }, [members, tCommon]);
 
   const [nodes, , onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);

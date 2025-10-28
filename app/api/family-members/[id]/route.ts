@@ -35,6 +35,32 @@ export async function PUT(
       return NextResponse.json({ message: "Family member not found" }, { status: 404 });
     }
 
+    // Handle bidirectional spouse relationships
+    const oldSpouseIds = (existingMember.spouseIds || []).map(id => id.toString());
+    const newSpouseIds = data.spouseIds || [];
+
+    // Find spouses to add (in new but not in old)
+    const spousesToAdd = newSpouseIds.filter((id: string) => !oldSpouseIds.includes(id));
+
+    // Find spouses to remove (in old but not in new)
+    const spousesToRemove = oldSpouseIds.filter(id => !newSpouseIds.includes(id));
+
+    // Add this member to new spouses
+    if (spousesToAdd.length > 0) {
+      await FamilyMember.updateMany(
+        { _id: { $in: spousesToAdd } },
+        { $addToSet: { spouseIds: id } }
+      );
+    }
+
+    // Remove this member from old spouses
+    if (spousesToRemove.length > 0) {
+      await FamilyMember.updateMany(
+        { _id: { $in: spousesToRemove } },
+        { $pull: { spouseIds: id } }
+      );
+    }
+
     // Update the member
     const updatedMember = await FamilyMember.findByIdAndUpdate(
       id,

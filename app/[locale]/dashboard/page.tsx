@@ -5,20 +5,25 @@ import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import { CldUploadWidget, CldImage } from "next-cloudinary";
+import { useTranslations } from "next-intl";
 import { IFamilyMember } from "@/types";
 import { useIsAuthorizedEditor } from "@/lib/authorization";
+import LanguageSwitcher from "@/components/i18n/LanguageSwitcher";
 
 // Dynamic import to avoid SSR issues with ReactFlow
 const FamilyTree = dynamic(() => import("@/components/tree/FamilyTree"), {
   ssr: false,
   loading: () => (
     <div className="w-full h-[calc(100vh-200px)] bg-vintage-paper rounded-lg border-4 border-vintage-border vintage-shadow flex items-center justify-center">
-      <p className="text-vintage-dark">Loading family tree...</p>
+      <p className="text-vintage-dark">加载中... / Loading...</p>
     </div>
   ),
 });
 
 export default function DashboardPage() {
+  const t = useTranslations("dashboard");
+  const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const { user, isLoaded } = useUser();
   const { signOut } = useClerk();
   const router = useRouter();
@@ -104,7 +109,7 @@ export default function DashboardPage() {
   if (!isLoaded || loading) {
     return (
       <main className="min-h-screen p-8 vintage-texture flex items-center justify-center">
-        <p className="text-vintage-dark text-xl">Loading...</p>
+        <p className="text-vintage-dark text-xl">{tCommon("loading")}</p>
       </main>
     );
   }
@@ -115,21 +120,22 @@ export default function DashboardPage() {
         <div className="flex justify-between items-center mb-6">
           <div>
             <h1 className="text-4xl font-vintage text-vintage-sepia text-shadow-vintage">
-              Family Tree
+              {t("title")}
             </h1>
             <p className="text-vintage-dark mt-1">
-              Welcome, {user?.firstName || user?.emailAddresses[0]?.emailAddress}
-              {!isEditor && <span className="text-sm ml-2">(View Only)</span>}
+              {t("welcome")}, {user?.firstName || user?.emailAddresses[0]?.emailAddress}
+              {!isEditor && <span className="text-sm ml-2">{t("viewOnly")}</span>}
             </p>
           </div>
           <div className="flex gap-3">
+            <LanguageSwitcher />
             {isEditor && (
               <button
                 onClick={handleAddMember}
                 className="px-6 py-2 bg-vintage-sepia text-vintage-paper rounded
                          hover:bg-vintage-dark transition-colors border-2 border-vintage-dark vintage-shadow"
               >
-                Add Family Member
+                {t("addMember")}
               </button>
             )}
             <button
@@ -137,7 +143,7 @@ export default function DashboardPage() {
               className="px-6 py-2 bg-vintage-border text-vintage-paper rounded
                        hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
             >
-              Logout
+              {tNav("logout")}
             </button>
           </div>
         </div>
@@ -145,12 +151,12 @@ export default function DashboardPage() {
         {members.length === 0 ? (
           <div className="bg-vintage-light border-4 border-vintage-border rounded-lg p-12 text-center vintage-shadow">
             <h2 className="text-2xl font-vintage text-vintage-sepia mb-4">
-              The family tree is empty
+              {t("emptyTree.title")}
             </h2>
             <p className="text-vintage-dark mb-6">
               {isEditor
-                ? "Start building the family legacy by adding the first family member"
-                : "No family members have been added yet. Check back later!"}
+                ? t("emptyTree.description")
+                : t("emptyTree.descriptionViewOnly")}
             </p>
             {isEditor && (
               <button
@@ -158,7 +164,7 @@ export default function DashboardPage() {
                 className="px-8 py-3 bg-vintage-sepia text-vintage-paper rounded-lg
                          hover:bg-vintage-dark transition-colors border-2 border-vintage-dark vintage-shadow"
               >
-                Add First Member
+                {t("emptyTree.addFirst")}
               </button>
             )}
           </div>
@@ -197,6 +203,9 @@ function MemberModal({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const t = useTranslations("memberModal");
+  const tCommon = useTranslations("common");
+
   const formatDateForInput = (date?: Date) => {
     if (!date) return "";
     const d = new Date(date);
@@ -215,6 +224,7 @@ function MemberModal({
     photoUrl: member?.photoUrl || "",
     fatherId: member?.fatherId?.toString() || "",
     motherId: member?.motherId?.toString() || "",
+    spouseIds: member?.spouseIds?.map(id => id.toString()) || [],
   });
   const [loading, setLoading] = useState(false);
 
@@ -240,6 +250,7 @@ function MemberModal({
           photoUrl: formData.photoUrl || null,
           fatherId: formData.fatherId || null,
           motherId: formData.motherId || null,
+          spouseIds: formData.spouseIds,
         }),
       });
 
@@ -261,13 +272,13 @@ function MemberModal({
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
       <div className="bg-vintage-light border-4 border-vintage-border rounded-lg p-6 max-w-2xl w-full max-h-[90vh] overflow-y-auto vintage-shadow">
         <h2 className="text-2xl font-vintage text-vintage-sepia mb-6">
-          {member ? "Edit Family Member" : "Add Family Member"}
+          {member ? t("editTitle") : t("addTitle")}
         </h2>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Name *</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.nameRequired")}</label>
               <input
                 type="text"
                 value={formData.name}
@@ -279,22 +290,22 @@ function MemberModal({
             </div>
 
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Gender *</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.genderRequired")}</label>
               <select
                 value={formData.gender}
                 onChange={(e) => setFormData({ ...formData, gender: e.target.value as "male" | "female" })}
                 className="w-full px-3 py-2 border-2 border-vintage-border rounded bg-vintage-paper
                          focus:outline-none focus:border-vintage-sepia"
               >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
+                <option value="male">{tCommon("male")}</option>
+                <option value="female">{tCommon("female")}</option>
               </select>
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Birth Date</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.birthDate")}</label>
               <input
                 type="date"
                 value={formData.birthDate}
@@ -305,7 +316,7 @@ function MemberModal({
             </div>
 
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Death Date</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.deathDate")}</label>
               <input
                 type="date"
                 value={formData.deathDate}
@@ -318,14 +329,14 @@ function MemberModal({
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Father</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.father")}</label>
               <select
                 value={formData.fatherId}
                 onChange={(e) => setFormData({ ...formData, fatherId: e.target.value })}
                 className="w-full px-3 py-2 border-2 border-vintage-border rounded bg-vintage-paper
                          focus:outline-none focus:border-vintage-sepia"
               >
-                <option value="">None</option>
+                <option value="">{tCommon("none")}</option>
                 {maleMembers.map((m) => (
                   <option key={m._id?.toString()} value={m._id?.toString()}>
                     {m.name}
@@ -335,14 +346,14 @@ function MemberModal({
             </div>
 
             <div>
-              <label className="block text-vintage-dark font-medium mb-2">Mother</label>
+              <label className="block text-vintage-dark font-medium mb-2">{t("fields.mother")}</label>
               <select
                 value={formData.motherId}
                 onChange={(e) => setFormData({ ...formData, motherId: e.target.value })}
                 className="w-full px-3 py-2 border-2 border-vintage-border rounded bg-vintage-paper
                          focus:outline-none focus:border-vintage-sepia"
               >
-                <option value="">None</option>
+                <option value="">{tCommon("none")}</option>
                 {femaleMembers.map((m) => (
                   <option key={m._id?.toString()} value={m._id?.toString()}>
                     {m.name}
@@ -353,19 +364,44 @@ function MemberModal({
           </div>
 
           <div>
-            <label className="block text-vintage-dark font-medium mb-2">Description</label>
+            <label className="block text-vintage-dark font-medium mb-2">
+              {t("fields.spouses")}
+              <span className="text-xs text-vintage-dark ml-2">({t("fields.spousesHint")})</span>
+            </label>
+            <select
+              multiple
+              value={formData.spouseIds}
+              onChange={(e) => {
+                const selected = Array.from(e.target.selectedOptions, option => option.value);
+                setFormData({ ...formData, spouseIds: selected });
+              }}
+              className="w-full px-3 py-2 border-2 border-vintage-border rounded bg-vintage-paper
+                       focus:outline-none focus:border-vintage-sepia min-h-[100px]"
+            >
+              {members
+                .filter(m => m._id?.toString() !== member?._id?.toString())
+                .map((m) => (
+                  <option key={m._id?.toString()} value={m._id?.toString()}>
+                    {m.name} ({m.gender === "male" ? tCommon("male") : tCommon("female")})
+                  </option>
+                ))}
+            </select>
+          </div>
+
+          <div>
+            <label className="block text-vintage-dark font-medium mb-2">{t("fields.description")}</label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               rows={3}
               className="w-full px-3 py-2 border-2 border-vintage-border rounded bg-vintage-paper
                        focus:outline-none focus:border-vintage-sepia resize-none"
-              placeholder="Add notes about this person..."
+              placeholder={t("fields.descriptionPlaceholder")}
             />
           </div>
 
           <div>
-            <label className="block text-vintage-dark font-medium mb-2">Photo</label>
+            <label className="block text-vintage-dark font-medium mb-2">{t("fields.photo")}</label>
             <div className="space-y-3">
               {formData.photoUrl && (
                 <div className="relative inline-block">
@@ -397,9 +433,10 @@ function MemberModal({
                   croppingAspectRatio: 1,
                   croppingShowDimensions: true,
                 }}
-                onSuccess={(result: any) => {
-                  if (result?.info?.secure_url) {
-                    setFormData({ ...formData, photoUrl: result.info.secure_url });
+                onSuccess={(result: unknown) => {
+                  const uploadResult = result as { info?: { secure_url?: string } };
+                  if (uploadResult?.info?.secure_url) {
+                    setFormData({ ...formData, photoUrl: uploadResult.info.secure_url });
                   }
                 }}
               >
@@ -409,7 +446,7 @@ function MemberModal({
                     onClick={() => open()}
                     className="px-4 py-2 bg-vintage-sepia text-vintage-paper rounded hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
                   >
-                    {formData.photoUrl ? "Change Photo" : "Upload Photo"}
+                    {formData.photoUrl ? t("fields.changePhoto") : t("fields.uploadPhoto")}
                   </button>
                 )}
               </CldUploadWidget>
@@ -424,7 +461,7 @@ function MemberModal({
                        hover:bg-vintage-dark transition-colors disabled:opacity-50
                        border-2 border-vintage-dark vintage-shadow"
             >
-              {loading ? "Saving..." : "Save"}
+              {loading ? tCommon("saving") : tCommon("save")}
             </button>
             <button
               type="button"
@@ -432,7 +469,7 @@ function MemberModal({
               className="flex-1 bg-vintage-border text-vintage-paper py-2 rounded
                        hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
             >
-              Cancel
+              {tCommon("cancel")}
             </button>
           </div>
         </form>

@@ -1,0 +1,83 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "confirm": "Confirm",
+    "male": "Male",
+    "female": "Female",
+    "none": "None",
+    "spouse": "Spouse"
+  },
+  "nav": {
+    "home": "Home",
+    "dashboard": "Dashboard",
+    "logout": "Logout",
+    "language": "Language"
+  },
+  "home": {
+    "title": "Family Tree",
+    "subtitle": "Record and Explore Your Family History",
+    "description": "Create, manage, and visualize your family tree. Track generations, record relationships, and preserve family memories.",
+    "getStarted": "Get Started",
+    "signIn": "Sign In",
+    "features": {
+      "title": "Features",
+      "visual": {
+        "title": "Visual Family Tree",
+        "description": "View your family relationships through an interactive tree diagram"
+      },
+      "manage": {
+        "title": "Manage Members",
+        "description": "Add, edit and organize family member information"
+      },
+      "photos": {
+        "title": "Family Photos",
+        "description": "Upload and preserve photos for each family member"
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Family Tree",
+    "welcome": "Welcome",
+    "viewOnly": "(View Only)",
+    "addMember": "Add Family Member",
+    "emptyTree": {
+      "title": "The family tree is empty",
+      "description": "Start building the family legacy by adding the first family member",
+      "descriptionViewOnly": "No family members have been added yet. Check back later!",
+      "addFirst": "Add First Member"
+    }
+  },
+  "memberModal": {
+    "addTitle": "Add Family Member",
+    "editTitle": "Edit Family Member",
+    "fields": {
+      "name": "Name",
+      "nameRequired": "Name *",
+      "gender": "Gender",
+      "genderRequired": "Gender *",
+      "birthDate": "Birth Date",
+      "deathDate": "Death Date",
+      "father": "Father",
+      "mother": "Mother",
+      "spouses": "Spouses",
+      "spousesHint": "Can select multiple spouses",
+      "description": "Description",
+      "descriptionPlaceholder": "Add notes about this person...",
+      "photo": "Photo",
+      "uploadPhoto": "Upload Photo",
+      "changePhoto": "Change Photo"
+    },
+    "deleteConfirm": "Are you sure you want to delete this family member?"
+  },
+  "errors": {
+    "fetchMembers": "Error fetching members",
+    "deleteMembers": "Error deleting member",
+    "updatePosition": "Error updating node position",
+    "saveMember": "Error saving member"
+  }
+}

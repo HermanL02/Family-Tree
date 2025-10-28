@@ -3,8 +3,8 @@ import "./globals.css";
 import { ClerkProvider } from '@clerk/nextjs';
 
 export const metadata: Metadata = {
-  title: "Family Tree",
-  description: "A vintage-styled family tree application",
+  title: "族谱 | Family Tree",
+  description: "一个复古风格的族谱应用 | A vintage-styled family tree application",
 };
 
 export default function RootLayout({
@@ -14,7 +14,7 @@ export default function RootLayout({
 }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
+      <html>
         <body className="antialiased">
           {children}
         </body>
