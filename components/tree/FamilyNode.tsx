@@ -3,6 +3,7 @@
 import { memo } from "react";
 import { Handle, Position, NodeProps } from "reactflow";
 import { motion } from "framer-motion";
+import { CldImage } from "next-cloudinary";
 import { IFamilyMember } from "@/types";
 
 interface FamilyNodeData {
@@ -39,6 +40,19 @@ function FamilyNode({ data }: NodeProps<FamilyNodeData>) {
                    ${getGenderColor(member.gender)}`}
       >
         <div className="space-y-1">
+          {member.photoUrl && (
+            <div className="flex justify-center mb-2">
+              <CldImage
+                width="80"
+                height="80"
+                src={member.photoUrl}
+                alt={member.name}
+                crop="fill"
+                gravity="face"
+                className="rounded-full border-2 border-vintage-sepia object-cover"
+              />
+            </div>
+          )}
           <h3 className="font-vintage font-bold text-vintage-sepia text-lg leading-tight">
             {member.name}
           </h3>

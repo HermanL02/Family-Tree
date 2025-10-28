@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useUser, useClerk } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
+import { CldUploadWidget, CldImage } from "next-cloudinary";
 import { IFamilyMember } from "@/types";
 import { useIsAuthorizedEditor } from "@/lib/authorization";
 
@@ -211,6 +212,7 @@ function MemberModal({
     birthDate: formatDateForInput(member?.birthDate),
     deathDate: formatDateForInput(member?.deathDate),
     description: member?.description || "",
+    photoUrl: member?.photoUrl || "",
     fatherId: member?.fatherId?.toString() || "",
     motherId: member?.motherId?.toString() || "",
   });
@@ -235,6 +237,7 @@ function MemberModal({
           ...formData,
           birthDate: formData.birthDate || null,
           deathDate: formData.deathDate || null,
+          photoUrl: formData.photoUrl || null,
           fatherId: formData.fatherId || null,
           motherId: formData.motherId || null,
         }),
@@ -359,6 +362,58 @@ function MemberModal({
                        focus:outline-none focus:border-vintage-sepia resize-none"
               placeholder="Add notes about this person..."
             />
+          </div>
+
+          <div>
+            <label className="block text-vintage-dark font-medium mb-2">Photo</label>
+            <div className="space-y-3">
+              {formData.photoUrl && (
+                <div className="relative inline-block">
+                  <CldImage
+                    width="150"
+                    height="150"
+                    src={formData.photoUrl}
+                    alt="Member photo"
+                    crop="fill"
+                    gravity="face"
+                    className="rounded-lg border-2 border-vintage-border"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setFormData({ ...formData, photoUrl: "" })}
+                    className="absolute -top-2 -right-2 bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center hover:bg-red-700"
+                  >
+                    ×
+                  </button>
+                </div>
+              )}
+              <CldUploadWidget
+                uploadPreset={process.env.NEXT_PUBLIC_CLOUDINARY_UPLOAD_PRESET || "family-tree-photos"}
+                options={{
+                  folder: "family-members",
+                  maxFileSize: 10000000,
+                  clientAllowedFormats: ["jpg", "png", "webp", "jpeg"],
+                  cropping: true,
+                  croppingAspectRatio: 1,
+                  croppingShowDimensions: true,
+                }}
+                onSuccess={(result: any) => {
+                  if (result?.info?.secure_url) {
+                    setFormData({ ...formData, photoUrl: result.info.secure_url });
+                  }
+                }}
+              >
+                {({ open }) => (
+                  <button
+                    type="button"
+                    onClick={() => open()}
+                    className="px-4 py-2 bg-vintage-sepia text-vintage-paper rounded hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
+                  >
+                    {formData.photoUrl ? "Change Photo" : "Upload Photo"}
+                  </button>
+                )}
+              </CldUploadWidget>
+            </div>
           </div>
 
           <div className="flex gap-3 pt-4">
