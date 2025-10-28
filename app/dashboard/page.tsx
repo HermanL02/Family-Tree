@@ -196,11 +196,20 @@ function MemberModal({
   onClose: () => void;
   onSave: () => void;
 }) {
+  const formatDateForInput = (date?: Date) => {
+    if (!date) return "";
+    const d = new Date(date);
+    const year = d.getUTCFullYear();
+    const month = String(d.getUTCMonth() + 1).padStart(2, '0');
+    const day = String(d.getUTCDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
+  };
+
   const [formData, setFormData] = useState({
     name: member?.name || "",
     gender: member?.gender || "male",
-    birthDate: member?.birthDate ? new Date(member.birthDate).toISOString().split("T")[0] : "",
-    deathDate: member?.deathDate ? new Date(member.deathDate).toISOString().split("T")[0] : "",
+    birthDate: formatDateForInput(member?.birthDate),
+    deathDate: formatDateForInput(member?.deathDate),
     description: member?.description || "",
     fatherId: member?.fatherId?.toString() || "",
     motherId: member?.motherId?.toString() || "",

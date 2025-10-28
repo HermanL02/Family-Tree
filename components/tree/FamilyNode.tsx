@@ -17,7 +17,8 @@ function FamilyNode({ data }: NodeProps<FamilyNodeData>) {
 
   const formatDate = (date?: Date) => {
     if (!date) return "";
-    return new Date(date).getFullYear();
+    const d = new Date(date);
+    return d.getUTCFullYear();
   };
 
   const getGenderColor = (gender: string) => {

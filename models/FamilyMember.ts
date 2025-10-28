@@ -4,8 +4,7 @@ import { IFamilyMember } from "@/types";
 const FamilyMemberSchema = new Schema<IFamilyMember>(
   {
     userId: {
-      type: Schema.Types.ObjectId,
-      ref: "User",
+      type: String,
       required: true,
     },
     name: {
