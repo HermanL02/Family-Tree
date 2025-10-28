@@ -12,6 +12,10 @@ const isPublicRoute = createRouteMatcher([
   '/',
   '/zh',
   '/en',
+  '/dashboard',
+  '/zh/dashboard',
+  '/en/dashboard',
+  '/api/family-members',  // Allow public GET access to view family tree
   '/sign-in(.*)',
   '/sign-up(.*)',
   '/zh/sign-in(.*)',

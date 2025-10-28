@@ -15,6 +15,7 @@
   "nav": {
     "home": "首页",
     "dashboard": "仪表板",
+    "signIn": "登录",
     "logout": "退出登录",
     "language": "语言"
   },

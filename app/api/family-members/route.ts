@@ -3,18 +3,12 @@ import dbConnect from "@/lib/mongodb";
 import FamilyMember from "@/models/FamilyMember";
 import { getCurrentUserId, isAuthorizedEditor } from "@/lib/authorizationServer";
 
-// GET - Fetch all family members (shared tree - all authenticated users can view)
+// GET - Fetch all family members (public - anyone can view)
 export async function GET() {
   try {
-    const userId = await getCurrentUserId();
-
-    if (!userId) {
-      return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
-    }
-
     await dbConnect();
 
-    // Fetch all members (shared tree)
+    // Fetch all members (shared tree - public access)
     const members = await FamilyMember.find({}).sort({ createdAt: -1 });
 
     return NextResponse.json({ members }, { status: 200 });

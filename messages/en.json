@@ -15,6 +15,7 @@
   "nav": {
     "home": "Home",
     "dashboard": "Dashboard",
+    "signIn": "Sign In",
     "logout": "Logout",
     "language": "Language"
   },

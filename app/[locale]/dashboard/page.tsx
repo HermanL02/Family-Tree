@@ -34,16 +34,11 @@ export default function DashboardPage() {
   const [editingMember, setEditingMember] = useState<IFamilyMember | null>(null);
 
   useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/sign-in");
-    }
-  }, [isLoaded, user, router]);
-
-  useEffect(() => {
-    if (isLoaded && user) {
+    // Allow both authenticated and unauthenticated users to view the tree
+    if (isLoaded) {
       fetchMembers();
     }
-  }, [isLoaded, user]);
+  }, [isLoaded]);
 
   const fetchMembers = async () => {
     try {
@@ -122,10 +117,16 @@ export default function DashboardPage() {
             <h1 className="text-4xl font-vintage text-vintage-sepia text-shadow-vintage">
               {t("title")}
             </h1>
-            <p className="text-vintage-dark mt-1">
-              {t("welcome")}, {user?.firstName || user?.emailAddresses[0]?.emailAddress}
-              {!isEditor && <span className="text-sm ml-2">{t("viewOnly")}</span>}
-            </p>
+            {user ? (
+              <p className="text-vintage-dark mt-1">
+                {t("welcome")}, {user?.firstName || user?.emailAddresses[0]?.emailAddress}
+                {!isEditor && <span className="text-sm ml-2">{t("viewOnly")}</span>}
+              </p>
+            ) : (
+              <p className="text-vintage-dark mt-1">
+                {t("viewOnly")}
+              </p>
+            )}
           </div>
           <div className="flex gap-3">
             <LanguageSwitcher />
@@ -138,13 +139,23 @@ export default function DashboardPage() {
                 {t("addMember")}
               </button>
             )}
-            <button
-              onClick={handleLogout}
-              className="px-6 py-2 bg-vintage-border text-vintage-paper rounded
-                       hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
-            >
-              {tNav("logout")}
-            </button>
+            {user ? (
+              <button
+                onClick={handleLogout}
+                className="px-6 py-2 bg-vintage-border text-vintage-paper rounded
+                         hover:bg-vintage-dark transition-colors border-2 border-vintage-dark"
+              >
+                {tNav("logout")}
+              </button>
+            ) : (
+              <button
+                onClick={() => router.push("/sign-in")}
+                className="px-6 py-2 bg-vintage-sepia text-vintage-paper rounded
+                         hover:bg-vintage-dark transition-colors border-2 border-vintage-dark vintage-shadow"
+              >
+                {tNav("signIn")}
+              </button>
+            )}
           </div>
         </div>
 
